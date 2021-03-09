@@ -1,0 +1,63 @@
+work_dir: ./work_dir/pku
+model_saved_name: ./runs/pku
+# feeder
+feeder: feeders.feeder.Feeder
+train_feeder_args:
+  data_path: ./data/PKU/train/train_data.npy
+  label_path: ./data/PKU/train/train_label.pkl
+  #p_label_path: ./data/PKU/train/train_subject_label.npy
+  ntu_data_path: ./data/ntu/xview/train_data_joint.npy
+  ntu_label_path: ./data/ntu/xview/train_label.pkl
+  debug: False
+  random_choose: False
+  random_shift: False
+  random_move: False
+  window_size: -1
+  normalization: False
+  ntu_action: [2,0,1,3,4,5,6,7,8,9,10,11,12,19,13,14,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,36,37,39,42,43,44,45,46,49,50,51,52,53,54,55,57]
+  target_action: [3,8,10,2,9,22,41,33,34,6,30,51,40,28,48,37,49,36,35,5,13,19,29,15,17,20,23,46,25,39,4,31,1,50,32,7,11,44,43,42,45,26,18,27,21,24,16,12,14]
+test_feeder_args:
+  data_path: ./data/PKU/val/val_data.npy
+  label_path: ./data/PKU/val/val_label.pkl
+  ntu_data_path: ./data/ntu/xview/val_data_joint.npy
+  ntu_label_path: ./data/ntu/xview/val_label.pkl
+  #p_label_path: ./data/citi_data/val/val_subject_label.npy
+  ntu_action: [2,0,1,3,4,5,6,7,8,9,10,11,12,19,13,14,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,36,37,39,42,43,44,45,46,49,50,51,52,53,54,55,57]
+  target_action: [3,8,10,2,9,22,41,33,34,6,30,51,40,28,48,37,49,36,35,5,13,19,29,15,17,20,23,46,25,39,4,31,1,50,32,7,11,44,43,42,45,26,18,27,21,24,16,12,14]
+
+# model
+model: model.agcn.Model
+model_args:
+  num_class: 60
+  num_point: 25
+  num_person: 2
+  graph: graph.ntu_rgb_d.Graph
+  graph_args:
+    labeling_mode: 'spatial'
+  #pre_graph: graph.ntu_rgb_d.Graph
+  #pre_graph_args:
+  #  labeling_mode: 'spatial'
+#optim
+weight_decay: 0.0001
+base_lr: 0.1
+step: [30, 40]
+intersection_action: [3,8,10,2,9,22,41,33,34,6,30,51,40,28,48,37,49,36,35,5,13,19,29,15,17,20,23,46,25,39,4,31,1,50,32,7,11,44,43,42,45,26,18,27,21,24,16,12,14]
+tsne_act: [3,1,2,4,5,6,7,8,9,10,11,12,13,20,14,15,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,37,38,40,43,44,45,46,47,50,51,52,53,54,55,56,58]
+# training
+device: [0, 1 ,2, 3]
+batch_size: 16
+test_batch_size: 16
+num_epoch: 50
+nesterov: True
+
+target_encoder: model.agcn.target_encoder
+target_encoder_args:
+  num_class: 60
+  num_point: 25
+  num_person: 2
+  graph: graph.pku.Graph
+  graph_args:
+    labeling_mode: 'spatial'
+  pre_graph: graph.ntu_rgb_d.Graph
+  pre_graph_args:
+    labeling_mode: 'spatial'

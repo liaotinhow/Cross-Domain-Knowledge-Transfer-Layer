@@ -1,0 +1,65 @@
+work_dir: ./work_dir/citi
+model_saved_name: ./runs/citi1
+# feeder
+feeder: feeders.feeder.Feeder
+train_feeder_args:
+  data_path: ./data/citi_data/train/train_data.npy
+  label_path: ./data/citi_data/train/train_label.pkl
+  #p_label_path: ./data/citi_data/train/train_subject_label.npy
+  ntu_data_path: ./data/ntu/xview/train_data_joint.npy
+  ntu_label_path: ./data/ntu/xview/train_label.pkl
+  debug: False
+  random_choose: False
+  random_shift: False
+  random_move: False
+  window_size: -1
+  normalization: False
+  ntu_action: [7,8,5,13,14,27,0,22,9]
+  target_action: [1,4,6,9,10,11,12,13,14]
+test_feeder_args:
+  data_path: ./data/citi_data/val/val_data.npy
+  label_path: ./data/citi_data/val/val_label.pkl
+  #p_label_path: ./data/citi_data/val/val_subject_label.npy
+  ntu_data_path: ./data/ntu/xview/val_data_joint.npy
+  ntu_label_path: ./data/ntu/xview/val_label.pkl
+  ntu_action: [7,8,5,13,14,27,0,22,9]
+  target_action: [1,4,6,9,10,11,12,13,14]
+# model
+model: model.agcn.Model
+model_args:
+  num_class: 60
+  num_point: 25
+  num_person: 2
+  graph: graph.ntu_rgb_d.Graph
+  graph_args:
+    labeling_mode: 'spatial'
+  #pre_graph: graph.ntu_rgb_d.Graph
+  #pre_graph_args: 
+  #  labeling_mode: 'spatial'
+
+#optim
+weight_decay: 0.0001
+base_lr: 0.1
+step: [30, 40]
+
+intersection_action: [1,4,6,9,10,11,12,13,14]
+tsne_act: [7,8,5,13,14,27,0,22,9]
+# training
+device: [0, 1 ,2, 3]
+batch_size: 16
+test_batch_size: 16
+num_epoch: 300
+nesterov: True
+
+
+target_encoder: model.agcn.target_encoder
+target_encoder_args:
+  num_class: 60
+  num_point: 20
+  num_person: 2
+  graph: graph.citi.Graph
+  graph_args:
+    labeling_mode: 'spatial'
+  pre_graph: graph.ntu_rgb_d.Graph
+  pre_graph_args: 
+    labeling_mode: 'spatial'
